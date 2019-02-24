@@ -8,11 +8,17 @@ class HelloWorld extends React.Component {
         super(props);
         this.state = {
             count: 0,
+            labelText: '',
         }
     }
 
     increaseCount(){
         const count = this.state.count + 1;
+        if (count === 100){
+            this.setState({labelText: 'Get a life!'})
+        } else if (count === 200){
+            this.setState({labelText: 'Please stop :('})
+        }
         this.setState({count: count});
     }
 
@@ -24,6 +30,7 @@ class HelloWorld extends React.Component {
                 <IncreaseButton
                     increaseCount={() => this.increaseCount()}
                 />
+                <NagLabel value={this.state.labelText}></NagLabel>
             </div>
         )
     }
@@ -36,6 +43,10 @@ function IncreaseButton(props){
 }
 
 function Counter(props) {
+    return (<div><p>{props.value}</p></div>)
+}
+
+function NagLabel(props) {
     return (<div><p>{props.value}</p></div>)
 }
 

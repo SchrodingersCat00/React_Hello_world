@@ -7,6 +7,9 @@ import axios from 'axios'
 class HelloWorld extends React.Component {
     constructor(props) {
         super(props);
+        axios.get('https://api.thecatapi.com/v1/images/search').then(
+            this.parseCatResponse
+        );
         this.state = {
             count: 0,
             labelText: '',
@@ -16,6 +19,7 @@ class HelloWorld extends React.Component {
 
     parseCatResponse(response) {
         const url = response.data[0].url;
+        console.log(url);
         this.setState({catUrl: url});
     }
 
@@ -34,9 +38,6 @@ class HelloWorld extends React.Component {
     }
 
     render() {
-        axios.get('https://api.thecatapi.com/v1/images/search').then(
-            this.parseCatResponse
-        );
         return (
             <div>
                 <p>Hello, World!</p>

@@ -8,18 +8,18 @@ class HelloWorld extends React.Component {
     constructor(props) {
         super(props);
         axios.get('https://api.thecatapi.com/v1/images/search').then(
-            this.parseCatResponse
+            (r) => this.parseCatResponse(r)
         );
         this.state = {
             count: 0,
             labelText: '',
             catUrl: '',
+            dispCat: false,
         }
     }
 
     parseCatResponse(response) {
         const url = response.data[0].url;
-        console.log(url);
         this.setState({catUrl: url});
     }
 
@@ -31,10 +31,15 @@ class HelloWorld extends React.Component {
             this.setState({labelText: 'Please stop :('});
         } else if (count === 30) {
             this.setState({
-                labelText: 'Here is a cat, now please go on with your life!'
+                labelText: 'Here is a cat, now please go on with your life!',
+                dispCat: true,
             });
         }
         this.setState({count: count});
+    }
+
+    boolToVisibility(bool){
+        return bool ? 'visible' : 'hidden';
     }
 
     render() {
@@ -46,7 +51,10 @@ class HelloWorld extends React.Component {
                     increaseCount={() => this.increaseCount()}
                 />
                 <NagLabel value={this.state.labelText}/>
-                <CatImage url={this.state.catUrl} />
+                <CatImage 
+                    url={this.state.catUrl} 
+                    visible={this.boolToVisibility(this.state.dispCat)}
+                />
             </div>
         )
     }
@@ -57,6 +65,9 @@ function CatImage(props) {
         <img 
             src={props.url} 
             alt="There should have been a cat here :("
+            style={{
+                visibility: props.visible,
+            }}
         />
     )
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import axios from 'axios'
 
 
 class HelloWorld extends React.Component {
@@ -9,20 +10,33 @@ class HelloWorld extends React.Component {
         this.state = {
             count: 0,
             labelText: '',
+            catUrl: '',
         }
+    }
+
+    parseCatResponse(response) {
+        const url = response.data[0].url;
+        this.setState({catUrl: url});
     }
 
     increaseCount(){
         const count = this.state.count + 1;
-        if (count === 100){
-            this.setState({labelText: 'Get a life!'})
-        } else if (count === 200){
-            this.setState({labelText: 'Please stop :('})
+        if (count === 10){
+            this.setState({labelText: 'Get a life!'});
+        } else if (count === 20){
+            this.setState({labelText: 'Please stop :('});
+        } else if (count === 30) {
+            this.setState({
+                labelText: 'Here is a cat, now please go on with your life!'
+            });
         }
         this.setState({count: count});
     }
 
     render() {
+        axios.get('https://api.thecatapi.com/v1/images/search').then(
+            this.parseCatResponse
+        );
         return (
             <div>
                 <p>Hello, World!</p>
@@ -30,10 +44,20 @@ class HelloWorld extends React.Component {
                 <IncreaseButton
                     increaseCount={() => this.increaseCount()}
                 />
-                <NagLabel value={this.state.labelText}></NagLabel>
+                <NagLabel value={this.state.labelText}/>
+                <CatImage url={this.state.catUrl} />
             </div>
         )
     }
+}
+
+function CatImage(props) {
+    return (
+        <img 
+            src={props.url} 
+            alt="There should have been a cat here :("
+        />
+    )
 }
 
 function IncreaseButton(props){
